@@ -20,7 +20,7 @@ Verify URL Contains Search Term
 
 *** Keywords ***
 Setup Browser
-    Open Browser    https://www.google.com    chrome    headless=True
+    Open Browser    https://www.google.com    headlesschrome
 
 Teardown Browser
     Close Browser
