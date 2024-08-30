@@ -1,30 +1,40 @@
 *** Settings ***
-Documentation    API Testing in Robotframework
-Library     SeleniumLibrary
-Library    RequestsLibrary
-Library    JSON
-Library    Collection
+Library           SeleniumLibrary
+Library           Collections
+Library           OperatingSystem
+Library           String
+Suite Setup       Setup Browser
+Suite Teardown    Teardown Browser
+Library    ../Test_data/setup.py
+
 
 *** Variables ***
-${base_url}     https://reqres.in
+${SEARCH_TERM}    OpenAI
+${SEARCH_TEXT}    search
+
 *** Test Cases ***
-Do a GET Request and validate the response code and response body
-    [Documentation]     This test case verifies that the response code of the GET Request should be 200
-    [Tags]    Smoke
-    Set Test Message    verified successfully
+Verify URL Contains Search Term
+    Open Google
+    Perform Search    ${SEARCH_TERM}
+    Verify URL Contains    ${SEARCH_TEXT}
 
-    Create Session  mysession  ${base_url}
-    ${response}=  GET On Session    mysession  /api/users/2
-    ${status_code}=     Convert To String    ${response.status_code}
-    Log To Console    ${status_code}
-    Log To Console    ${response.content}
-    Should Be Equal    ${status_code}   200  #Check Status as 200
+*** Keywords ***
+Setup Browser
+    Open Browser    https://www.google.com    chrome    headless=True
 
-#    Check Title as London from Response Body
-#    ${title}=     ${response.json()}[0]  title
-#    ${titleFromList}=  Get Fulrom List   ${title}  0
-#    Should be equal  ${titleFromList}  London
-#
-#    Check location_type is present in the repsonse body
-#    ${body}=  Convert To String  ${response.content}
-#    Should Contain  ${body}  email
+Teardown Browser
+    Close Browser
+
+Open Google
+    # Navigates to Google home page
+    Go To    https://www.google.com
+
+Perform Search
+    [Arguments]    ${search_term}
+    Input Text    name:q    ${search_term}
+    Press Key    name:q    \\13  # Press Enter
+
+Verify URL Contains
+    [Arguments]    ${expected_text}
+    ${current_url}=    Get Location
+    Should Contain    ${current_url}    ${expected_text}
