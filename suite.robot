@@ -5,7 +5,6 @@ Library           OperatingSystem
 Library           String
 Suite Setup       Setup Browser
 Suite Teardown    Teardown Browser
-Library    ../Test_data/setup.py
 
 
 *** Variables ***
